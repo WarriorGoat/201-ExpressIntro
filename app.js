@@ -25,16 +25,31 @@ app.get('/', (req, res) => {
 })
 
 app.get('/all-movies', (req, res) => {
-	res.send(favoriteMovieList)
+    console.log("regular option");
+    filteredMovieList = favoriteMovieList
+	res.json({
+		success: true,
+		movieList: filteredMovieList
+	})
+})
+
+app.get('/all-movies/:ratingToFilter', (req, res) => {
+    const filteredMovieList = []
+    favoriteMovieList.forEach((movie)=>{
+        if (movie.starRating >= Number(req.params.ratingToFilter)){
+            filteredMovieList.push(movie);
+        }return
+    })
+	res.json({
+		success: true,
+		movieList: filteredMovieList
+	})
 })
 
 app.get('/single-movie/:titleToFind', (req, res) => {
 	const movieRequested = favoriteMovieList.find((movie)=>{
-        console.log(0, typeof(req.params.titleToFind));
-        console.log(1, typeof(movie.title));
 		return movie.title === req.params.titleToFind;
 	})
-    console.log(2, typeof(movieRequested));
 	res.json({
 		success: true,
 		movie: movieRequested
